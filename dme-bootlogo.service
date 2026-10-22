@@ -1,0 +1,17 @@
+[Unit]
+Description=DME OS boot logo (shows very early in boot)
+After=systemd-udevd.service local-fs.target
+Before=multi-user.target
+
+# __USER__ and __REPO__ are filled in by setup.sh --autostart
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=__USER__
+# lgpio needs a writable working directory
+WorkingDirectory=/home/__USER__/.config/dme_os
+ExecStart=/usr/bin/python3 __REPO__/bootlogo.py
+
+[Install]
+WantedBy=multi-user.target
