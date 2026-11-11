@@ -3,6 +3,7 @@
 import logging
 import os
 import queue
+import subprocess
 import sys
 import traceback
 
@@ -10,6 +11,16 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 from dme import settings as settings_mod  # noqa: E402
+
+
+def _release_lcd():
+    """If the boot-time console mirror is still holding the LCD, ask it to let go.
+    (Started from systemd this has already happened; this covers running by hand over SSH.)"""
+    try:
+        subprocess.run(["sudo", "-n", "systemctl", "stop", "dme-console.service"],
+                       capture_output=True, timeout=10)
+    except Exception:
+        pass
 
 
 def main():
@@ -33,6 +44,7 @@ def main():
     theme.apply(settings.get("theme"))
     ui.set_background(settings.get("background"))
 
+    _release_lcd()
     display = hal.Display()
     try:
         boot.play(display, settings.get("background"))
@@ -49,7 +61,7 @@ def main():
     try:
         inbox.start()
     except OSError:
-        logging.exception("photo inbox failed to start (port 8000 busy?)")
+        logging.exception("photo/video inbox failed to start (port 8000 busy?)")
 
     try:
         app.run()

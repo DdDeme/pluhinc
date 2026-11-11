@@ -10,7 +10,7 @@ from . import music, theme, ui
 
 log = logging.getLogger("dme")
 
-VIDEO_EXTS = (".mp4", ".mov", ".m4v", ".avi", ".mkv")
+VIDEO_EXTS = (".mp4", ".mov", ".m4v", ".3gp", ".3g2", ".webm", ".avi", ".mkv")
 
 
 class App:

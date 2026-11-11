@@ -29,10 +29,11 @@ REPEATABLE = {"UP", "DOWN", "LEFT", "RIGHT"}
 #  - joystick DOWN (GPIO 19) and KEY1 (GPIO 21) are the I2S pins of the MAX98357 speaker amp
 #    (LRCLK and DATA). Reading them as buttons would also switch the amp's pins to inputs
 #    and silence it, so they are left alone.
+#  - KEY2 (GPIO 20) is the Pi's I2S DIN pin. The amp doesn't use it, but the hifiberry-dac
+#    overlay still claims it, so lgpio cannot read that button.
 #  - joystick LEFT is dead on this HAT, but it just never fires, so it's harmless.
-# What's left: UP, RIGHT, PRESS, KEY2, KEY3. RIGHT scrolls down in menus (Screen.right_is_down);
-# the games steer with RIGHT and KEY2.
-DEAD_BUTTONS = {"DOWN", "KEY1"}
+# What's left: UP, RIGHT, PRESS, KEY3. RIGHT scrolls down in menus (Screen.right_is_down).
+DEAD_BUTTONS = {"DOWN", "KEY1", "KEY2"}
 
 
 def _find_driver_dir():

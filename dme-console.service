@@ -1,0 +1,24 @@
+[Unit]
+Description=Mirror the Pi's raw boot console onto the LCD
+# Start before sysinit/basic so the earliest possible boot messages are captured.
+DefaultDependencies=no
+After=local-fs.target systemd-udevd.service dev-spidev0.0.device dev-gpiochip0.device
+Before=sysinit.target basic.target getty@tty1.service dme-os.service shutdown.target
+Conflicts=shutdown.target
+
+# __USER__ and __REPO__ are filled in by setup.sh
+# Reads the active virtual console's raw text (needs the tty group); /dev/fb0 is
+# only used if a monitor is attached. Stops when DME OS starts or a monitor appears.
+
+[Service]
+User=__USER__
+# Read the console text (tty) and, if a monitor appears, /dev/fb0 (video).
+SupplementaryGroups=video tty
+# lgpio needs a writable working directory
+WorkingDirectory=/home/__USER__/.config/dme_os
+ExecStart=/usr/bin/python3 __REPO__/consolemirror.py
+Restart=no
+TimeoutStopSec=5
+
+[Install]
+WantedBy=sysinit.target

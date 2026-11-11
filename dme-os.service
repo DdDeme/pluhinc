@@ -1,7 +1,6 @@
 [Unit]
 Description=DME OS
-After=dme-bootlogo.service network.target bluetooth.target
-Wants=dme-bootlogo.service
+After=dme-console.service network.target bluetooth.target
 
 # __USER__ and __REPO__ are filled in by setup.sh --autostart
 
@@ -9,6 +8,8 @@ Wants=dme-bootlogo.service
 User=__USER__
 # lgpio needs a writable working directory
 WorkingDirectory=/home/__USER__/.config/dme_os
+# Take the LCD over from the console mirror. "-" = ignore failure, "+" = run as root.
+ExecStartPre=-+/usr/bin/systemctl stop dme-console.service
 ExecStart=/usr/bin/python3 __REPO__/dme_os.py
 # "Exit DME" (clean exit) stays exited; a crash restarts it
 Restart=on-failure
